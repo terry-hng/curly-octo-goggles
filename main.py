@@ -2,6 +2,7 @@ from investpy import news
 import requests
 import datetime as dt
 import pytz
+import os
 
 def there_is_news_incoming(news_list):
     for news in news_list:
