@@ -17,7 +17,8 @@ headers = {
 
 df = news.economic_calendar(importances=["high"], countries=["united states", "new zealand", "australia", "euro zone", "united kingdom", 'china'])
 
-news_list = df[["time", "zone", "event"]].to_dict(orient="records")
+news_list = [{'event': 'Fed Monetary Policy Report', 'time': '11:45', 'zone': 'new zealand'}] 
+# df[["time", "zone", "event"]].to_dict(orient="records")
 
 flags_emoji_dict = {
     "new zealand": "🇳🇿",
