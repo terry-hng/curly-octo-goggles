@@ -70,5 +70,3 @@ if there_is_news_incoming(news_list=news_list):
     payload = {"content": message + "---------------------------------\n"}
 
     requests.post(discord_channel_url, payload, headers=headers)
-
-print(message)
