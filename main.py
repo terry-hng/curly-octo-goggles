@@ -31,7 +31,7 @@ flags_emoji_dict = {
 time_format = '%H:%M'
 
 if there_is_news_incoming(news_list=news_list):
-    message = "> **Incoming News❗❗❗**\n\n"
+    message = "> **Incoming ⭐⭐⭐ News❗❗❗**\n\n"
 
     for news in news_list:
         if dt.datetime.strptime(news["time"], time_format) - dt.datetime.strptime(dt.datetime.now().strftime(time_format), time_format) <= dt.timedelta(hours=1):
