@@ -32,7 +32,7 @@ df = news.economic_calendar(
 
 news_list = df[["time", "zone", "event"]].to_dict(orient="records")
 
-pprint.pprint(news_list)
+# pprint.pprint(news_list)
 
 flags_emoji_dict = {
     "new zealand": "🇳🇿",
