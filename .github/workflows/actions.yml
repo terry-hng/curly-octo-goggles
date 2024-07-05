@@ -28,6 +28,5 @@ jobs:
     - name: Run Python script
       env:
         DISCORD_AUTH_KEY: ${{ secrets.DISCORD_AUTH_KEY }}
-        OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
       run: |
         python main.py
