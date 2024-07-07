@@ -33,7 +33,7 @@ df = news.economic_calendar(
     ],
 )
 
-if not dt.empty:
+if not df.empty:
     news_list = df[["time", "zone", "event"]].to_dict(orient="records")
     
     # pprint.pprint(news_list)
