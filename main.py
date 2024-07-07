@@ -33,40 +33,41 @@ df = news.economic_calendar(
     ],
 )
 
-news_list = df[["time", "zone", "event"]].to_dict(orient="records")
-
-# pprint.pprint(news_list)
-
-flags_emoji_dict = {
-    "new zealand": "🇳🇿",
-    "australia": "🇦🇺",
-    "united states": "🇺🇸",
-    "china": "🇨🇳",
-    "euro zone": "🇪🇺",
-    "united kingdom": "🇬🇧",
-}
-
-time_format = "%H:%M"
-
-if there_is_news_incoming(news_list=news_list):
-    message = "> **Incoming News ⭐⭐⭐**\n\n"
-
-    for news in news_list:
-        if (
-            dt.timedelta(hours=0)
-            <= dt.datetime.strptime(news["time"], time_format)
-            - dt.datetime.strptime(dt.datetime.now().strftime(time_format), time_format)
-            <= dt.timedelta(hours=1)
-        ):
-            # print(
-            #     dt.datetime.strptime(news["time"], time_format)
-            #     - dt.datetime.strptime(
-            #         dt.datetime.now().strftime(time_format), time_format
-            #     )
-            # )
-
-            message += f"{dt.datetime.strptime(news["time"], "%H:%M").replace(tzinfo=pytz.utc).astimezone(dt.timezone(dt.timedelta(hours=7))).strftime("%H:%M")}\t|\t{news["zone"].title()}    {flags_emoji_dict[news["zone"]]}\t|\t**{news["event"]}**\n\n"
-
-    payload = {"content": message + "---------------------------------\n"}
+if not dt.empty:
+    news_list = df[["time", "zone", "event"]].to_dict(orient="records")
+    
+    # pprint.pprint(news_list)
+    
+    flags_emoji_dict = {
+        "new zealand": "🇳🇿",
+        "australia": "🇦🇺",
+        "united states": "🇺🇸",
+        "china": "🇨🇳",
+        "euro zone": "🇪🇺",
+        "united kingdom": "🇬🇧",
+    }
+    
+    time_format = "%H:%M"
+    
+    if there_is_news_incoming(news_list=news_list):
+        message = "> **Incoming News ⭐⭐⭐**\n\n"
+    
+        for news in news_list:
+            if (
+                dt.timedelta(hours=0)
+                <= dt.datetime.strptime(news["time"], time_format)
+                - dt.datetime.strptime(dt.datetime.now().strftime(time_format), time_format)
+                <= dt.timedelta(hours=1)
+            ):
+                # print(
+                #     dt.datetime.strptime(news["time"], time_format)
+                #     - dt.datetime.strptime(
+                #         dt.datetime.now().strftime(time_format), time_format
+                #     )
+                # )
+    
+                message += f"{dt.datetime.strptime(news["time"], "%H:%M").replace(tzinfo=pytz.utc).astimezone(dt.timezone(dt.timedelta(hours=7))).strftime("%H:%M")}\t|\t{news["zone"].title()}    {flags_emoji_dict[news["zone"]]}\t|\t**{news["event"]}**\n\n"
+    
+        payload = {"content": message + "---------------------------------\n"}
 
     requests.post(discord_channel_url, payload, headers=headers)
