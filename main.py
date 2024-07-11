@@ -69,7 +69,7 @@ if not df.empty:
             <= dt.timedelta(hours=1)
             ):
 
-                message += f"- {news["time"]}\t|\t{news["zone"].title()}   {flags_emoji_dict[news["zone"]]}\t|\t**{news["event"]}**\n\n"
+                message += f"- {news["time"]}\t|\t{flags_emoji_dict[news["zone"]]}  {news["zone"].title()} (**{news["currency"]}**)\t|\t**{news["event"]}**\n\n"
 
         payload = {"content": message + "---------------------------------\n"}
 
