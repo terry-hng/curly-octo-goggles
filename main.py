@@ -37,6 +37,7 @@ df = news.economic_calendar(
         "euro zone",
         "united kingdom",
         "china",
+        "germany"
     ],
 )
 
@@ -51,6 +52,7 @@ if not df.empty:
         "china": "🇨🇳",
         "euro zone": "🇪🇺",
         "united kingdom": "🇬🇧",
+        "germany": "🇩🇪",
     }
 
     time_format = "%H:%M"
