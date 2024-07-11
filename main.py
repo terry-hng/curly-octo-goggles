@@ -22,7 +22,7 @@ def there_is_news_incoming(news_list):
             return True
 
 
-discord_channel_url = "https://discord.com/api/v9/channels/1250363649579810817/messages"
+discord_channel_url = "https://discord.com/api/v9/channels/1258699001268666390/messages"
 headers = {
     "Authorization": os.environ.get("DISCORD_AUTH_KEY")
 }  # auth key needed to send messages through discord
