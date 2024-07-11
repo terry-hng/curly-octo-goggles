@@ -3,25 +3,32 @@ import requests
 import datetime as dt
 import pytz
 import os
+# from pprint import pprint
+
+
+def convert_to_vietnam_time_object(time_str):
+    return pytz.timezone("Asia/Ho_Chi_Minh").localize(
+        dt.datetime.strptime(time_str, "%H:%M")
+    )
+
 
 def there_is_news_incoming(news_list):
     for news in news_list:
         if (
             dt.timedelta(hours=0)
-            <= dt.datetime.strptime(news["time"], time_format)
-            - dt.datetime.strptime(dt.datetime.now().strftime(time_format), time_format)
+            <= convert_to_vietnam_time_object(news["time"]) - convert_to_vietnam_time_object(dt.datetime.strftime(dt.datetime.now(pytz.timezone("Asia/Ho_Chi_Minh")), time_format))
             <= dt.timedelta(hours=1)
         ):
             return True
 
 
-discord_channel_url = "https://discord.com/api/v9/channels/1258699001268666390/messages"
+discord_channel_url = "https://discord.com/api/v9/channels/1250363649579810817/messages"
 headers = {
     "Authorization": os.environ.get("DISCORD_AUTH_KEY")
 }  # auth key needed to send messages through discord
 
 df = news.economic_calendar(
-    time_zone="GMT",
+    time_zone="GMT +7:00",
     importances=["high"],
     countries=[
         "united states",
@@ -35,9 +42,8 @@ df = news.economic_calendar(
 
 if not df.empty:
     news_list = df[["time", "zone", "event"]].to_dict(orient="records")
-    
-    # pprint.pprint(news_list)
-    
+    # pprint(news_list)
+
     flags_emoji_dict = {
         "new zealand": "🇳🇿",
         "australia": "🇦🇺",
@@ -46,28 +52,31 @@ if not df.empty:
         "euro zone": "🇪🇺",
         "united kingdom": "🇬🇧",
     }
-    
+
     time_format = "%H:%M"
-    
+
+
     if there_is_news_incoming(news_list=news_list):
-        message = "> **Incoming News ⭐⭐⭐**\n\n"
-    
+        message = "> **Incoming News   ⭐⭐⭐**\n\n"
+
         for news in news_list:
             if (
-                dt.timedelta(hours=0)
-                <= dt.datetime.strptime(news["time"], time_format)
-                - dt.datetime.strptime(dt.datetime.now().strftime(time_format), time_format)
-                <= dt.timedelta(hours=1)
+            dt.timedelta(hours=0)
+            <= convert_to_vietnam_time_object(news["time"]) 
+            - convert_to_vietnam_time_object(dt.datetime.strftime(dt.datetime.now(pytz.timezone("Asia/Ho_Chi_Minh")), time_format))
+            <= dt.timedelta(hours=1)
             ):
-                # print(
-                #     dt.datetime.strptime(news["time"], time_format)
-                #     - dt.datetime.strptime(
-                #         dt.datetime.now().strftime(time_format), time_format
-                #     )
-                # )
-    
-                message += f"{dt.datetime.strptime(news["time"], "%H:%M").replace(tzinfo=pytz.utc).astimezone(dt.timezone(dt.timedelta(hours=7))).strftime("%H:%M")}\t|\t{news["zone"].title()}    {flags_emoji_dict[news["zone"]]}\t|\t**{news["event"]}**\n\n"
-    
+
+                message += f"- {news["time"]}\t|\t{news["zone"].title()}{flags_emoji_dict[news["zone"]]}\t|\t**{news["event"]}**\n\n"
+
         payload = {"content": message + "---------------------------------\n"}
 
         requests.post(discord_channel_url, payload, headers=headers)
+
+        print(message)
+    else:
+        # for news in news_list:
+            
+        #     print(convert_to_vietnam_time_object(news["time"]) - convert_to_vietnam_time_object(dt.datetime.strftime(dt.datetime.now(pytz.timezone("Asia/Ho_Chi_Minh")), time_format)))
+            
+        print("\nNo News")
