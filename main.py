@@ -42,7 +42,7 @@ df = news.economic_calendar(
 )
 
 if not df.empty:
-    news_list = df[["time", "zone", "event"]].to_dict(orient="records")
+    news_list = df[["time", "zone", "event", "currency"]].to_dict(orient="records")
     # pprint(news_list)
 
     flags_emoji_dict = {
