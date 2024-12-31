@@ -3,6 +3,7 @@ import requests
 import datetime as dt
 import pytz
 import os
+
 # from pprint import pprint
 
 
@@ -16,7 +17,12 @@ def there_is_news_incoming(news_list):
     for news in news_list:
         if (
             dt.timedelta(hours=0)
-            <= convert_to_vietnam_time_object(news["time"]) - convert_to_vietnam_time_object(dt.datetime.strftime(dt.datetime.now(pytz.timezone("Asia/Ho_Chi_Minh")), time_format))
+            <= convert_to_vietnam_time_object(news["time"])
+            - convert_to_vietnam_time_object(
+                dt.datetime.strftime(
+                    dt.datetime.now(pytz.timezone("Asia/Ho_Chi_Minh")), time_format
+                )
+            )
             <= dt.timedelta(hours=1)
         ):
             return True
@@ -37,7 +43,7 @@ df = news.economic_calendar(
         "euro zone",
         "united kingdom",
         "china",
-        "germany"
+        "germany",
     ],
 )
 
@@ -57,19 +63,26 @@ if not df.empty:
 
     time_format = "%H:%M"
 
-
     if there_is_news_incoming(news_list=news_list):
         message = "> **Incoming News   ⭐⭐⭐**\n\n"
 
         for news in news_list:
-            if (
-            dt.timedelta(hours=0)
-            <= convert_to_vietnam_time_object(news["time"]) 
-            - convert_to_vietnam_time_object(dt.datetime.strftime(dt.datetime.now(pytz.timezone("Asia/Ho_Chi_Minh")), time_format))
-            <= dt.timedelta(hours=1)
-            ):
+            if news["time"] != "All Day":
+                if (
+                    dt.timedelta(hours=0)
+                    <= convert_to_vietnam_time_object(news["time"])
+                    - convert_to_vietnam_time_object(
+                        dt.datetime.strftime(
+                            dt.datetime.now(pytz.timezone("Asia/Ho_Chi_Minh")),
+                            time_format,
+                        )
+                    )
+                    <= dt.timedelta(hours=1)
+                ):
 
-                message += f"- {news["time"]}\t|\t{flags_emoji_dict[news["zone"]]}  {news["zone"].title()} (**{news["currency"]}**)\t|\t**{news["event"]}**\n\n"
+                    message += f"- {news["time"]}\t|\t{flags_emoji_dict[news["zone"]]}  {news["zone"].title()} (**{news["currency"]}**)\t|\t**{news["event"]}**\n\n"
+            else:
+                continue
 
         payload = {"content": message + "---------------------------------\n"}
 
@@ -78,7 +91,7 @@ if not df.empty:
         print(message)
     else:
         # for news in news_list:
-            
+
         #     print(convert_to_vietnam_time_object(news["time"]) - convert_to_vietnam_time_object(dt.datetime.strftime(dt.datetime.now(pytz.timezone("Asia/Ho_Chi_Minh")), time_format)))
-            
+
         print("\nNo News")
