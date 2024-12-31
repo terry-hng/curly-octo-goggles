@@ -8,6 +8,8 @@ import os
 
 
 def convert_to_vietnam_time_object(time_str):
+    if time_str == "All Day":
+        return
     return pytz.timezone("Asia/Ho_Chi_Minh").localize(
         dt.datetime.strptime(time_str, "%H:%M")
     )
