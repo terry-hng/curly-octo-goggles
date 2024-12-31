@@ -15,17 +15,20 @@ def convert_to_vietnam_time_object(time_str):
 
 def there_is_news_incoming(news_list):
     for news in news_list:
-        if (
-            dt.timedelta(hours=0)
-            <= convert_to_vietnam_time_object(news["time"])
-            - convert_to_vietnam_time_object(
-                dt.datetime.strftime(
-                    dt.datetime.now(pytz.timezone("Asia/Ho_Chi_Minh")), time_format
+        if news["time"] != "All Day":
+            if (
+                dt.timedelta(hours=0)
+                <= convert_to_vietnam_time_object(news["time"])
+                - convert_to_vietnam_time_object(
+                    dt.datetime.strftime(
+                        dt.datetime.now(pytz.timezone("Asia/Ho_Chi_Minh")), time_format
+                    )
                 )
-            )
-            <= dt.timedelta(hours=1)
-        ):
-            return True
+                <= dt.timedelta(hours=1)
+            ):
+                return True
+        else:
+            continue
 
 
 discord_channel_url = "https://discord.com/api/v9/channels/1258699001268666390/messages"
@@ -67,22 +70,18 @@ if not df.empty:
         message = "> **Incoming News   ⭐⭐⭐**\n\n"
 
         for news in news_list:
-            if news["time"] != "All Day":
-                if (
-                    dt.timedelta(hours=0)
-                    <= convert_to_vietnam_time_object(news["time"])
-                    - convert_to_vietnam_time_object(
-                        dt.datetime.strftime(
-                            dt.datetime.now(pytz.timezone("Asia/Ho_Chi_Minh")),
-                            time_format,
-                        )
+            if (
+                dt.timedelta(hours=0)
+                <= convert_to_vietnam_time_object(news["time"])
+                - convert_to_vietnam_time_object(
+                    dt.datetime.strftime(
+                        dt.datetime.now(pytz.timezone("Asia/Ho_Chi_Minh")), time_format
                     )
-                    <= dt.timedelta(hours=1)
-                ):
+                )
+                <= dt.timedelta(hours=1)
+            ):
 
-                    message += f"- {news["time"]}\t|\t{flags_emoji_dict[news["zone"]]}  {news["zone"].title()} (**{news["currency"]}**)\t|\t**{news["event"]}**\n\n"
-            else:
-                continue
+                message += f"- {news["time"]}\t|\t{flags_emoji_dict[news["zone"]]}  {news["zone"].title()} (**{news["currency"]}**)\t|\t**{news["event"]}**\n\n"
 
         payload = {"content": message + "---------------------------------\n"}
 
